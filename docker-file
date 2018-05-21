@@ -1,0 +1,46 @@
+docker run -it ubuntu /bin/bash 
+This command ditrectly will go to the containerID after successful runnig.
+#docker attach <containerID> 
+_____________________________________________
+TASK TO install jenkins on TOM cat server --
+
+1. docker run -it tomcat:8.0-jre8 /bin/bash 
+ you will be displayed 
+
+root@f5b1027aa5c2:/usr/local/tomcat 
+and list ou the files by usin ll  
+go to webapps directory and copy the path which is 
+root@f5b1027aa5c2:/usr/local/tomcat/webapps#
+come to root folder and mkdir tomjenk (anyname) 
+create a file as vi dockerfile 
+--------------
+FROM tomcat:8.0-jre8
+MAINTAINER test
+ADD <copy the path for d/l ing the jenkins.war file> /usr/local/tomcat/webapps/jenkins.war
+EXPOSE 8080
+CMD ["catalina.sh","run"]
+---------------------------
+__________________________________________________________________
+Creating an image and container . . . . 
+#docker build -t myjenkins:1.0 . 
+after successful building 
+
+#docker run -p 8080:8080 myjenkins:1.0 
+
+you will be shown the password to login to jenkins.
+
+https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/2.60.1/jenkins-war-2.60.1.war
+
+---------------------------------------------------------------------------------
+08/07/17
+TASK -----ATTACHING VOLUMES AND CREATING DIRS TO CHECK WHETHER IT CAN BE DONE FROM CONTAINER TO HOST  
+
+#docker  attach <container > used to go to the /bin/bash of the container.
+Volumes ---------------------
+#docker run -it -v /data-mount ubuntu:trusty /bin/bash
+#mount |grep data-mount
+#df -h -- to chenk the mount is created or not.
+u will go to the /bib/bash 
+#cd /data-mount 
+in this dir create a txt files in a folder.
+#docker inspect <container ID>
