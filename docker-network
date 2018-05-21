@@ -1,0 +1,55 @@
+Single Host Networking:
+#docker n/w ls –default n/w – bridge,host,null 
+Create a n/w:
+# docker network create -d bridge --subnet 10.10.0.0/24 bridge1
+#docker n/w ls – to check the bridge created or not.
+#docker n/w inspect bridge1
+#docker run --network bridge1 --name c1 -it -d ubuntu:xenial /bin/bash – First Contnr
+#docker run --network bridge1 --name c2 -it -d ubuntu:xenial /bin/bash –Secnd Contr.
+#docker network inspect bridge1 -- to check the container configurd or not 
+ To attach the container c1
+#docker attach c1
+  	This command will go in to (/bin/bash ) 
+root@0d60c80a712d: 
+
+#apt-get update (will be done in container)
+
+# apt-get install iputils-ping (with in container)
+
+# ping c2 (this resembles that not only container-Id will ping but also container name.)
+To check whether the ping from c2 to c1 is happening or not 
+#docker attach c2
+#ping c1
+
+Now single host network is established . . . 
+
+
+Multi host network:
+
+1.Create 2instances ad check whether both these are pingable or not by using ipaddress. 
+#docker swarm init –advertise-addr <ipaddress> 
+(do in in first machine (manager) and copy the swarm join id given below, then the other machine will be the second (worker) machine)
+
+docker swarm join --token SWMTKN-1-0plqzc1mo44f8g9bwah0gj6eyy0ezrtlzjfbqgm37oasr65bua-eldkmbpexuo5f388723trlvfl 172.31.11.150:2377
+
+when u perform swarm init overlay network is created and can be  checked by using
+#docker network ls
+#docker node ls – to check the running nodes.
+Create an overlay network:
+#docker network create  –d  overlay qt-over
+Now a network is created by name qt-over (this is a ovelay type n/w. )
+#docker network ls
+Create a service (swarm) in the overlay network.
+#docker service create --name qt-service --network qt-over --replicas 4 hello-world sleep id
+ This will create 4 ids by name helloworld.(in worker )
+You also can check the status of the images in manager by using
+#docker ps qt-service (service name given)
+
+root@ip-172-31-11-150:~# docker service ps qt-service
+
+
+After executing the command you can see the you can see  few images are created in the worker.
+
+#docker service ls – to list the services
+#docker network inspect qt-service
+
